@@ -4,12 +4,14 @@
 #include "lcddraw.h"
 #include "draw_shapes.h"
 #include "switches.h"
+#include "buzzer.h"
 
 // WARNING: LCD DISPLAY USES P1.0.  Do not touch!!! 
 
 void main()
 {
   configureClocks();
+  buzzer_init();
   lcd_init();
   clearScreen(background_color);
   switch_p2_init();

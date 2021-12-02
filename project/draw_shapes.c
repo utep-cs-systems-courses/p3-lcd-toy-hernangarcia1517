@@ -3,6 +3,7 @@
 #include "lcddraw.h"
 #include "draw_shapes.h"
 #include "switches.h"
+#include "buzzer.h"
 
 // global vars for the rectangle
 rectangle rect1;
@@ -18,11 +19,15 @@ rectangle rect2;
 /* int r; */
 circle cir1;
 
+int set_buzz;
+
 u_int background_color = COLOR_BLUE;
 
 void
 init_shapes(void)
 {
+  set_buzz = 0;
+  
   // vars for the rectangle
   rect1.rect_row = 40;
   rect1.rect_col = screenWidth / 1.1; // change this
@@ -44,27 +49,30 @@ init_shapes(void)
   cir1.cir_x = screenWidth / 2;
   cir1.old_cir_y = 60;
   cir1.old_cir_x = screenWidth / 2;
-  cir1.r = 20;
+  cir1.r = 5;
 }
 
 void
 draw_moving_shapes(void)
 {
-  int left_col = rect1.old_rect_col - (rect1.width / 2);
-  int top_row  = rect1.old_rect_row - (rect1.height / 2);
+  int left_col1 = rect1.old_rect_col - (rect1.width / 2);
+  int top_row1  = rect1.old_rect_row - (rect1.height / 2);
+  int left_col2 = rect2.old_rect_col - (rect2.width / 2);
+  int top_row2  = rect2.old_rect_row - (rect2.height / 2);
 
   // blank out the old rectangle
-  fillRectangle(left_col, top_row, rect1.width, rect1.height, background_color);
+  fillRectangle(left_col1, top_row1, rect1.width, rect1.height, background_color);
+  fillRectangle(left_col2, top_row2, rect2.width, rect2.height, background_color);
 
   // blank out the old circle
-  draw_circle(cir1.old_cir_x, cir1.old_cir_y, cir1.r, background_color);
+  draw_circle(cir1.old_cir_x, cir1.old_cir_y, cir1.r, background_color, set_buzz);
 
   // draw and update the rectangle
   moving_rectangle(&rect1);
   moving_rectangle(&rect2);
   
   // draw and update the circle
-  //  moving_circle(); // FIXME: make the circle and move it
+  moving_circle(); // FIXME: make the circle and move it
 
   // draw the triangle
   // draw_triangle();
@@ -87,7 +95,7 @@ void
 moving_rectangle(rectangle *to_draw)
 {
   static int x_vel = 10;
-  static int y_vel = 5;
+  static int y_vel = 20;
 
   int left_col = to_draw->rect_col - (to_draw->width / 2);
   int top_row  = to_draw->rect_row - (to_draw->height / 2);
@@ -103,14 +111,14 @@ moving_rectangle(rectangle *to_draw)
   to_draw->old_rect_col = to_draw->rect_col;
 
   // update position
-  /*  if(switch1_state == down)
+  if(switch1_state == down && ((to_draw->rect_row + (to_draw->height / 2)) <= screenHeight)) // top
   {
     to_draw->rect_row += y_vel;
   }
-  if(switch2_state == down)
+  if(switch2_state == down && ((to_draw->rect_row - (to_draw->height / 2)) >= 0)) // bottom
   {
     to_draw->rect_row -= y_vel;
-    }*/
+  }
   /*  to_draw->rect_row += y_vel;
   to_draw->rect_col += x_vel;
 
@@ -181,8 +189,13 @@ drawLines(u_int x_coord, u_int y_coord, u_int x_point, u_int y_point, u_int colo
 }
 
 void
-draw_circle(int x, int y, int r, u_int color)
+draw_circle(int x, int y, int r, u_int color, int buzzer_buzz)
 {
+  if(buzzer_buzz == 1){
+    buzzer_set_period(1000);
+  } else{
+    buzzer_set_period(0);
+  }
   int x_coord = x;
   int y_coord = y;
   // first point will be the very top;
@@ -211,14 +224,14 @@ draw_circle(int x, int y, int r, u_int color)
 void
 moving_circle(void)
 {
-  static int x_vel = 5;
+  static int x_vel = -5;
   static int y_vel = 10;
   
   u_int color = COLOR_SIENNA;
 
 
   // draw at the new position
-  draw_circle(cir1.cir_x, cir1.cir_y, cir1.r, color);
+  draw_circle(cir1.cir_x, cir1.cir_y, cir1.r, color, set_buzz);
 
   // save current position
   cir1.old_cir_x = cir1.cir_x;
@@ -228,14 +241,19 @@ moving_circle(void)
   cir1.cir_x += x_vel;
   cir1.cir_y += y_vel;
   
+  set_buzz = 0;
+  
   // check boundaries, see if rectangle has hit the edges
-  if ( (cir1.cir_x + cir1.r) >= screenWidth || (cir1.cir_x - cir1.r) <= 0) {
+  // if ( (cir1.cir_x + cir1.r) >= screenWidth || (cir1.cir_x - cir1.r) <= 0) {
+  if(((cir1.cir_x + cir1.r) >= rect1.rect_col && (cir1.cir_y - cir1.r) >= (rect1.rect_col + rect1.height) && (cir1.cir_y + cir1.r) <= (rect1.rect_row - rect1.height)) || (cir1.cir_x - cir1.r) <= rect2.rect_col){
     // top or bottom hit, reverse x velocity
     x_vel = x_vel * -1;
+    // set_buzz = 1;
   }
   if ( ( cir1.cir_y - cir1.r ) <= 0 ||            // left boundary
        ( cir1.cir_y + cir1.r ) >= screenHeight ) { // right boundary
     // right or left hit, reverse y velocity
     y_vel = y_vel * -1;
+    // set_buzz = 1;
   }
 }
