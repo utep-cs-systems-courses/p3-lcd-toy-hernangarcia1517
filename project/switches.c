@@ -6,7 +6,7 @@
 const char down = 1;
 const char up = 0;
 
-char switch1_state, switch2_state, switch_state_changed;
+char switch1_state, switch2_state, switch3_state, switch4_state, switch_state_changed;
 
 /* update he interrupt sense bits so 
    interrupts are fired when a switch changes
@@ -42,5 +42,7 @@ check_p2_switches(void)
   // that so the state variable is 1 when down
   switch1_state = (p2val & SW1) ? 0 : 1;
   switch2_state = (p2val & SW2) ? 0 : 1;
+  switch3_state = (p2val & SW3) ? 0 : 1;
+  switch4_state = (p2val & SW4) ? 0 : 1;
   // redraw_screen = 1;            // switch status changed, redraw
 }

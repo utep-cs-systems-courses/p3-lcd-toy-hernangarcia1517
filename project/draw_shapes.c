@@ -133,6 +133,14 @@ moving_rectangle(rectangle *to_draw)
   {
     to_draw->rect_row -= y_vel;
   }
+  if(switch3_state == down && ((to_draw->rect_row + (to_draw->height / 2)) <= screenHeight)) // top
+  {
+    to_draw->rect_row += y_vel;
+  }
+  if(switch4_state == down && ((to_draw->rect_row - (to_draw->height / 2)) >= 0)) // bottom
+  {
+    to_draw->rect_row -= y_vel;
+  }
   /*  to_draw->rect_row += y_vel;
   to_draw->rect_col += x_vel;
 
