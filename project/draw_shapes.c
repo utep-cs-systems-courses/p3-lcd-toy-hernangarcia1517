@@ -20,6 +20,8 @@ rectangle rect2;
 circle cir1;
 
 int set_buzz;
+int left_score = 0;
+int right_score = 0;
 
 u_int background_color = COLOR_BLUE;
 
@@ -27,6 +29,7 @@ void
 init_shapes(void)
 {
   set_buzz = 0;
+  init_text();
   
   // vars for the rectangle
   rect1.rect_row = 40;
@@ -256,4 +259,39 @@ moving_circle(void)
     y_vel = y_vel * -1;
     // set_buzz = 1;
   }
+  // check if circle has hit left or right boundaries
+  if((cir1.cir_x + cir1.r) >= screenWidth) { // left?
+    left_score++;
+    update_text();
+  }
+  if((cir1.cir_x - cir1.r) <= 0){ // right?
+    right_score++;
+    update_text();
+  }
+}
+
+void
+update_text(void)
+{
+  const u_char text_row = 20;
+  const u_char text_col = 40;
+  const u_char char_width = 12;
+  static u_char blue = 31, green = 16, red = 31;
+  u_int on_color  =                (green << 5) | red;
+  u_int off_color = (blue << 11)                | red;
+
+  drawChar5x7(text_col, text_row, left_score+'0',on_color, background_color);
+  drawChar5x7(text_col + char_width, text_row, right_score+'0',on_color, background_color);
+  /*
+  if (switch1_state == down) {
+    drawChar5x7(text_col, text_row, left_score,on_color, background_color);
+  } else {
+    drawChar5x7(text_col, text_row, '-',off_color, background_color);
+  }
+  if (switch2_state == down) {
+    drawChar5x7(text_col + char_width, text_row, right_score,on_color, background_color);
+  } else {
+    drawChar5x7(text_col + char_width, text_row, '-',off_color, background_color);
+  }
+  */
 }
