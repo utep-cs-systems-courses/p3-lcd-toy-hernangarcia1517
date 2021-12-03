@@ -29,7 +29,7 @@ void
 init_shapes(void)
 {
   set_buzz = 0;
-  init_text();
+  update_text();
   
   // vars for the rectangle
   rect1.rect_row = 40;
@@ -194,6 +194,7 @@ drawLines(u_int x_coord, u_int y_coord, u_int x_point, u_int y_point, u_int colo
 void
 draw_circle(int x, int y, int r, u_int color, int buzzer_buzz)
 {
+  update_text();
   if(buzzer_buzz == 1){
     buzzer_set_period(1000);
   } else{
@@ -262,11 +263,9 @@ moving_circle(void)
   // check if circle has hit left or right boundaries
   if((cir1.cir_x + cir1.r) >= screenWidth) { // left?
     left_score++;
-    update_text();
   }
-  if((cir1.cir_x - cir1.r) <= 0){ // right?
+  if((cir1.cir_x - cir1.r) <= rect2.rect_col){//0){ // right?
     right_score++;
-    update_text();
   }
 }
 
