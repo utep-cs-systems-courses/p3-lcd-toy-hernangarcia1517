@@ -56,6 +56,17 @@ init_shapes(void)
 }
 
 void
+reset_circle(void)
+{
+  draw_circle(cir1.old_cir_x, cir1.old_cir_y, cir1.r, background_color, set_buzz);
+  cir1.cir_y = 60;
+  cir1.cir_x = screenWidth / 2;
+  cir1.old_cir_y = 60;
+  cir1.old_cir_x = screenWidth / 2;
+  cir1.r = 5;
+}
+
+void
 draw_moving_shapes(void)
 {
   int left_col1 = rect1.old_rect_col - (rect1.width / 2);
@@ -228,8 +239,8 @@ draw_circle(int x, int y, int r, u_int color, int buzzer_buzz)
 void
 moving_circle(void)
 {
-  static int x_vel = -5;
-  static int y_vel = 10;
+  static int x_vel = 5;
+  static int y_vel = 0;//10;
   
   u_int color = COLOR_SIENNA;
 
@@ -249,7 +260,8 @@ moving_circle(void)
   
   // check boundaries, see if rectangle has hit the edges
   // if ( (cir1.cir_x + cir1.r) >= screenWidth || (cir1.cir_x - cir1.r) <= 0) {
-  if(((cir1.cir_x + cir1.r) >= rect1.rect_col && (cir1.cir_y - cir1.r) >= (rect1.rect_col + rect1.height) && (cir1.cir_y + cir1.r) <= (rect1.rect_row - rect1.height)) || (cir1.cir_x - cir1.r) <= rect2.rect_col){
+  //if(((cir1.cir_x + cir1.r) >= rect1.rect_col && (cir1.cir_x + cir1.r) >= (rect1.rect_col + rect1.height) && (cir1.cir_x + cir1.r) <= (rect1.rect_row - rect1.height)) || (cir1.cir_x - cir1.r) <= rect2.rect_col){
+  if(((cir1.cir_y <= rect1.rect_col) && ((rect1.rect_col/2)- cir1.cir_y <= 35) && (cir1.cir_x == (rect1.rect_row/2))) || ((cir1.cir_y > rect1.rect_col) && (cir1.cir_y - (rect1.rect_col/2) <= 35) && (cir1.cir_x == (rect1.rect_row/2)))){ //)2{ && (cir1.cir_x + cir1.r) <= (rect1.rect_row + rect1.height))){
     // top or bottom hit, reverse x velocity
     x_vel = x_vel * -1;
     // set_buzz = 1;
@@ -263,9 +275,11 @@ moving_circle(void)
   // check if circle has hit left or right boundaries
   if((cir1.cir_x + cir1.r) >= screenWidth) { // left?
     left_score++;
+    reset_circle();
   }
-  if((cir1.cir_x - cir1.r) <= rect2.rect_col){//0){ // right?
+  if((cir1.cir_x - cir1.r) <= 0){//rect2.rect_col){//0){ // right?
     right_score++;
+    reset_circle();
   }
 }
 
