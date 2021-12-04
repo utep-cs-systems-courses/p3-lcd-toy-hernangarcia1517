@@ -248,7 +248,7 @@ void
 moving_circle(void)
 {
   static int x_vel = 5;
-  static int y_vel = 0;//10;
+  static int y_vel = 10;
   
   u_int color = COLOR_SIENNA;
 
@@ -276,18 +276,14 @@ moving_circle(void)
   if((((cir1.cir_x + cir1.r) >= rect1.rect_col))){
     if(cir1.cir_y >= rect1.rect_row && cir1.cir_y - rect1.rect_row <= 35 || cir1.cir_y < rect1.rect_row && rect1.rect_row <= 35){
       x_vel = x_vel * -1;
+      set_buzz = 1;
     }
-    // Top or bottom hit, reverse x velocity
-    //x_vel = x_vel * -1;
-    // set_buzz = 1;
   }
   if(((cir1.cir_x - cir1.r) <= rect2.rect_col)){
     if(cir1.cir_y >= rect2.rect_row && cir1.cir_y - rect2.rect_row <= 35 || cir1.cir_y < rect2.rect_row && rect2.rect_row <= 35){
       x_vel = x_vel * -1;
+      set_buzz = 1;
     }
-    // Top or bottom hit, reverse x velocity
-    //x_vel = x_vel * -1;
-    // set_buzz = 1;
   }
   if ( ( cir1.cir_y - cir1.r ) <= 0 ||            // left boundary
        ( cir1.cir_y + cir1.r ) >= screenHeight ) { // right boundary
