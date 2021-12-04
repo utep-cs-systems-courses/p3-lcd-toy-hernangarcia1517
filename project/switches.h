@@ -1,11 +1,13 @@
 #ifndef switches_included
 #define switches_included
 
+#define SW0 BIT3
+
 #define SW1 BIT0		/* switch 1 is p2.0 */
 #define SW2 BIT1                /* switch 2 is p2.1 */
 #define SW3 BIT2
 #define SW4 BIT3
-#define P2_SWITCHES (SW1 | SW2 | SW3 | SW4) /* Using left 2 switches on upper board */
+#define P2_SWITCHES (SW0 | SW1 | SW2 | SW3 | SW4) /* Using left 2 switches on upper board */
 
 void switch_p2_init(void);         /* Initializes the port 2 switches */
 void check_p2_switches(void);      /* Checks the port 2 switches */

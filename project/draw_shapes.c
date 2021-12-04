@@ -23,7 +23,7 @@ int set_buzz;
 int left_score = 0;
 int right_score = 0;
 
-u_int background_color = COLOR_BLUE;
+u_int background_color = COLOR_BLACK;
 
 void
 init_shapes(void)
@@ -268,17 +268,32 @@ moving_circle(void)
   
   // check boundaries, see if rectangle has hit the edges
   // if ( (cir1.cir_x + cir1.r) >= screenWidth || (cir1.cir_x - cir1.r) <= 0) {
-  //if(((cir1.cir_x + cir1.r) >= rect1.rect_col && (cir1.cir_x + cir1.r) >= (rect1.rect_col + rect1.height) && (cir1.cir_x + cir1.r) <= (rect1.rect_row - rect1.height)) || (cir1.cir_x - cir1.r) <= rect2.rect_col){
-  if(((cir1.cir_y <= rect1.rect_col) && ((rect1.rect_col/2)- cir1.cir_y <= 35) && (cir1.cir_x == (rect1.rect_row/2))) || ((cir1.cir_y > rect1.rect_col) && (cir1.cir_y - (rect1.rect_col/2) <= 35) && (cir1.cir_x == (rect1.rect_row/2)))){ //)2{ && (cir1.cir_x + cir1.r) <= (rect1.rect_row + rect1.height))){
-    // top or bottom hit, reverse x velocity
-    x_vel = x_vel * -1;
+  // if(((cir1.cir_x + cir1.r) >= rect1.rect_col) || ((cir1.cir_x - cir1.r) <= rect2.rect_col)){
+  // col is x
+  // row is y
+  // rect1 is right rect
+  // if((((cir1.cir_x + cir1.r) >= rect1.rect_col)) || ((cir1.cir_x - cir1.r) <= rect2.rect_col)){
+  if((((cir1.cir_x + cir1.r) >= rect1.rect_col))){
+    if(cir1.cir_y >= rect1.rect_row && cir1.cir_y - rect1.rect_row <= 35 || cir1.cir_y < rect1.rect_row && rect1.rect_row <= 35){
+      x_vel = x_vel * -1;
+    }
+    // Top or bottom hit, reverse x velocity
+    //x_vel = x_vel * -1;
+    // set_buzz = 1;
+  }
+  if(((cir1.cir_x - cir1.r) <= rect2.rect_col)){
+    if(cir1.cir_y >= rect2.rect_row && cir1.cir_y - rect2.rect_row <= 35 || cir1.cir_y < rect2.rect_row && rect2.rect_row <= 35){
+      x_vel = x_vel * -1;
+    }
+    // Top or bottom hit, reverse x velocity
+    //x_vel = x_vel * -1;
     // set_buzz = 1;
   }
   if ( ( cir1.cir_y - cir1.r ) <= 0 ||            // left boundary
        ( cir1.cir_y + cir1.r ) >= screenHeight ) { // right boundary
     // right or left hit, reverse y velocity
     y_vel = y_vel * -1;
-    // set_buzz = 1;
+    set_buzz = 1;
   }
   // check if circle has hit left or right boundaries
   if((cir1.cir_x + cir1.r) >= screenWidth) { // left?

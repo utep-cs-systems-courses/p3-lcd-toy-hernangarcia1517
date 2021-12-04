@@ -1,5 +1,6 @@
 #include <msp430.h>
 #include "switches.h"
+#include "case_state.h"
 // #include "led.h"
 
 // extern char redraw_screen;
@@ -20,13 +21,14 @@ switch_update_interrupt_sense(void)
   char p2val = P2IN;
   P2IES |= (p2val &  P2_SWITCHES);	// if switch up, sense down
   P2IES &= (p2val | ~P2_SWITCHES);	// if switch down, sense up
+  check_switch4();
   return p2val;
 }
 
 /* setup switches */
 void 
 switch_p2_init(void)
-{  
+{ 
   P2REN |=  P2_SWITCHES;		// enables resistors for switches
   P2IE  |=  P2_SWITCHES;		// enable interrupts from switches
   //P2OUT |=  SWITCHES;		// turn on switches so we can read them

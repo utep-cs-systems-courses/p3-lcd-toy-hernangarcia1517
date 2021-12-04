@@ -2,8 +2,11 @@
 #include "libTimer.h"
 #include "buzzer.h"
 
+int tune;
+
 void buzzer_init()
 {
+  tune = 1000;
     /* 
        Direct timer A output "TA0.1" to P2.6.  
         According to table 21 from data sheet:

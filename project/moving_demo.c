@@ -5,6 +5,7 @@
 #include "draw_shapes.h"
 #include "switches.h"
 #include "buzzer.h"
+#include "case_state.h"
 
 // WARNING: LCD DISPLAY USES P1.0.  Do not touch!!! 
 
